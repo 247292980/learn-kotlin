@@ -4,7 +4,7 @@ package com.lgp.kotlin.type
 /**
  * @AUTHOR lgp
  * @DATE 2018/8/14 16:48
- * @DESCRIPTION
+ * @DESCRIPTION 类型判断的语法
  *
  **/
 fun main(args: Array<String>) {
