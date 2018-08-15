@@ -52,11 +52,89 @@ fun main(args: Array<String>) {
         }
     })
     val s = Student4()
-    s.study();
+    s.study()
+
+    var user = User("123456")
+    user.Print()
+
+    printFoo(D())
+
+    var t = null
+    println(t.toString())
+
+    println("no:${MyClass.no}")
+    MyClass.foo()
+
+    val c = C8()
+    val d = D8()
+    c.caller(d)
 }
+//在一个类内部你可以为另一个类声明扩展。
+//在这个扩展中，有个多个隐含的接受者，其中扩展方法定义所在类的实例称为分发接受者，而扩展方法的目标类型的实例称为扩展接受者。
+class D8 {
+    fun bar() { println("D bar") }
+}
+
+class C8 {
+    fun baz() { println("C baz") }
+
+    fun D8.foo() {
+        bar()   // 调用 D.bar
+        baz()   // 调用 C.baz
+    }
+
+    fun caller(d: D8) {
+        d.foo()   // 调用扩展函数
+    }
+}
+//如果一个类定义有一个伴生对象 ，你也可以为伴生对象定义扩展函数和属性。
+//伴生对象通过"类名."形式调用伴生对象，伴生对象声明的扩展函数，通过用类名限定符来调用：
+class MyClass {
+    companion object {}  // 将被称为 "Companion"
+}
+
+fun MyClass.Companion.foo() {
+    println("伴随对象的扩展函数")
+}
+
+val MyClass.Companion.no: Int
+    get() = 10
+
+//扩展属性允许定义在类或者kotlin文件中，不允许定义在函数中。
+// 初始化属性因为属性没有后端字段（backing field），所以扩展属性不能有初始化器，只能由显式提供的 getter/setter 定义。
+val D.bar get() = 10
+
+//在扩展函数内， 可以通过 this 来判断接收者是否为 NULL,这样，即使接收者为 NULL,也可以调用扩展函数
+fun Any?.toString(): String {
+    if (this == null) return "null"
+    // 空检测之后，“this”会自动转换为非空类型，所以下面的 toString()
+    // 解析为 Any 类的成员函数
+    return toString()
+}
+
+//扩展函数是静态解析的，并不是接收者类型的虚拟成员，在调用扩展函数时，具体被调用的的是哪一个函数，由调用函数的的对象表达式来决定的，而不是动态的类型决定的:
+open class C2()
+
+class D : C2()
+
+fun C2.foo() = "c"   // 扩展函数 foo
+
+fun D.foo() = "d"   // 扩展函数 foo
+
+fun printFoo(c: C2) {
+    println(c.foo())  // 类型是 C 类
+}
+
 
 open class Foo4 {
     open val count: Int = 0
+}
+
+class User(var name: String)
+
+/**扩展函数**/
+fun User.Print() {
+    println("用户名 $name")
 }
 
 //你可以用一个var属性重写一个val属性，但是反过来不行
@@ -95,7 +173,7 @@ interface B {
     }
 }
 
-class C() : A(), B {
+class C : A(), B {
     override fun f() {
         super<A>.f()//调用 A.f()
         super<B>.f()//调用 B.f()
@@ -122,18 +200,14 @@ open class Person3(var name: String, var age: Int) {// 基类
 
 }
 
-class Student(name: String, age: Int, var no: String, var score: Int) : Person3(name, age) {
-
-}
+class Student(name: String, age: Int, var no: String, var score: Int) : Person3(name, age)
 
 //如果子类没有主构造函数，则必须在每一个二级构造函数中用 super 关键字初始化基类，或者在代理另一个构造函数
 class Student3 : Person3 {
 
-    constructor(age: Int) : this("asd", age) {
-    }
+    constructor(age: Int) : this("asd", age)
 
-    constructor(name: String, age: Int) : super(name, age) {
-    }
+    constructor(name: String, age: Int) : super(name, age)
 }
 
 //使用对象表达式来创建匿名内部类：
@@ -185,8 +259,7 @@ abstract class Derived {
 
 //如果一个非抽象类没有声明构造函数(主构造函数或次构造函数)，它会产生一个没有参数的构造函数。
 // 构造函数是 public 。如果你不想你的类有公共的构造函数，你就得声明一个空的主构造函数：
-class DontCreateMe private constructor() {
-}
+class DontCreateMe private constructor()
 
 // 主构造器中不能包含任何代码，初始化代码可以放在初始化代码段中，初始化代码段使用 init 关键字作为前缀。
 class Man constructor(firstName: String) {
@@ -196,9 +269,7 @@ class Man constructor(firstName: String) {
 
     //    类也可以有二级构造函数，需要加前缀 constructor:
 //    如果类有主构造函数，每个次构造函数都要，或直接或间接通过另一个次构造函数代理主构造函数
-    constructor(people: People) : this(people.name) {
-
-    }
+    constructor(people: People) : this(people.name)
 }
 
 //kotlin提供了一种可以延迟初始化的方案
@@ -224,7 +295,6 @@ class Person {
         }
 
     var no: Int = 100
-        get() = field                // 后端变量
         set(value) {
             if (value < 10) {       // 如果传入的值小于 10 返回该值
                 field = value
@@ -251,10 +321,7 @@ class foo2 {
 }
 
 //Koltin 中的类可以有一个 主构造器，以及一个或多个次构造器，主构造器是类头部的一部分，位于类名称之后:
-class Person2 constructor(firstName: String) {
-
-}
+class Person2 constructor(firstName: String)
 
 //constructor关键字可以省略。
-class Person1(firstName: String) {
-}
+class Person1(firstName: String)
