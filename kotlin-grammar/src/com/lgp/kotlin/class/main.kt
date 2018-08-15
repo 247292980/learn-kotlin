@@ -54,23 +54,26 @@ fun main(args: Array<String>) {
     val s = Student4()
     s.study();
 }
-interface Foo4 {
-    val count: Int
-}
-//你可以用一个var属性重写一个val属性，但是反过来不行
-class Bar41(override val count: Int) : Foo4
 
-class Bar42 : Foo4 {
+open class Foo4 {
+    open val count: Int = 0
+}
+
+//你可以用一个var属性重写一个val属性，但是反过来不行
+class Bar41(override val count: Int) : Foo4()
+
+class Bar42 : Foo4() {
     override var count: Int = 0
 }
 
 open class Foo {
-    open val x: Int =2
+    open val x: Int = 2
 }
 
 class Bar1 : Foo() {
-    override val x: Int =1
+    override val x: Int = 1
 }
+
 //有多个相同的方法（继承或者实现自其他类，如A、B类），则必须要重写该方法，使用super范型去选择性地调用父类的实现。
 open class A {
     open fun f() {
