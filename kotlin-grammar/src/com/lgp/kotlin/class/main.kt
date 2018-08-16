@@ -1,5 +1,9 @@
 package com.lgp.kotlin.`class`
 
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.JComponent
+
 
 /**
  * @AUTHOR lgp
@@ -68,15 +72,86 @@ fun main(args: Array<String>) {
     val c = C8()
     val d = D8()
     c.caller(d)
+
+//    对象表达式
+    val site3 = object {
+        var name: String = "菜鸟教程"
+        var url: String = "www.runoob.com"
+    }
+    println(site3.name)
+    println(site3.url)
+
+//    对象可以继承于某个基类，或者实现其他接口:
+    val ab: A3 = object : A3(1), B7 {
+        override fun hi() {
+        }
+
+        override val y = 15
+    }
+//    引用该对象，我们直接使用其名称
+    DataProviderManager.registerDataProvider(Student("1", 2, "3", 4))
+
+    val instance = MyClass6.create()   // 访问到对象的内部元素
 }
+//类内部的对象声明可以用 companion 关键字标记，这样它就与外部类关联在一起，我们就可以直接通过外部类访问到对象的内部元素。
+//伴生对象
+//一个类里面只能声明一个内部关联对象，即关键字 companion 只能使用一次。
+class MyClass6 {
+    companion object Factory {
+        fun create(): MyClass6 = MyClass6()
+    }
+}
+
+//    Kotlin 使用 object 关键字来声明一个对象。
+object DataProviderManager {
+    fun registerDataProvider(provider: Student) {
+        // ……
+    }
+
+    val allDataProviders: Collection<Student>
+        get() {
+            var coll: Collection<Student>? = null
+            return coll!!
+        }
+}
+
+//在对象表达中可以方便的访问到作用域中的其他变量:
+fun countClicks(window: JComponent) {
+    var clickCount = 0
+    var enterCount = 0
+
+    window.addMouseListener(object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent) {
+            clickCount++
+        }
+
+        override fun mouseEntered(e: MouseEvent) {
+            enterCount++
+        }
+    })
+}
+
+open class A3(x: Int) {
+    public open val y: Int = x
+}
+
+interface B7 {
+    fun hi()
+}
+
+
 //在一个类内部你可以为另一个类声明扩展。
 //在这个扩展中，有个多个隐含的接受者，其中扩展方法定义所在类的实例称为分发接受者，而扩展方法的目标类型的实例称为扩展接受者。
 class D8 {
-    fun bar() { println("D bar") }
+    fun bar() {
+        println("D bar")
+    }
 }
 
 class C8 {
-    fun baz() { println("C baz") }
+    fun baz() {
+        println("C baz")
+    }
 
     fun D8.foo() {
         bar()   // 调用 D.bar
@@ -87,6 +162,7 @@ class C8 {
         d.foo()   // 调用扩展函数
     }
 }
+
 //如果一个类定义有一个伴生对象 ，你也可以为伴生对象定义扩展函数和属性。
 //伴生对象通过"类名."形式调用伴生对象，伴生对象声明的扩展函数，通过用类名限定符来调用：
 class MyClass {
